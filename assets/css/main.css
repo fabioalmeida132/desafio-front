@@ -5,3 +5,11 @@
 body{
   @apply bg-bgPrimary
 }
+
+.btn-primary{
+  @apply bg-blue-500 text-white py-1 px-3 rounded-xl;
+}
+
+.btn-danger{
+  @apply bg-red-500 text-white py-1 px-3 rounded-xl;
+}
