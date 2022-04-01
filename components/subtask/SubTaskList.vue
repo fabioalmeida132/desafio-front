@@ -1,15 +1,10 @@
 <template>
   <div class="mt-5">
     <div class="flex flex-row justify-between items-center mb-3">
-      <h3 class="text-sm sm:text-lg font-semibold mb-3">Subtarefas</h3>
+      <h4 class="text-sm sm:text-lg font-semibold mb-3">Subtarefas</h4>
       <button> + Adicionar Subtarefa</button>
     </div>
-    <SubTaskItem/>
-    <SubTaskItem/>
-    <SubTaskItem/>
-    <SubTaskItem/>
-    <SubTaskItem/>
-    <SubTaskItem/>
+    <SubTaskItem v-for="subtask in subtasks" :key="subtask.id" :subtask="subtask"/>
   </div>
 </template>
 
@@ -19,7 +14,23 @@ import Vue from 'vue'
 import SubTaskItem from "~/components/subtask/SubTaskItem.vue";
 
 export default Vue.extend({
-  components: {SubTaskItem}
+
+  props: {
+    task: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      subtasks: {}
+    }
+  },
+  components: {SubTaskItem},
+  async fetch() {
+    this.subtasks = await this.$store.dispatch('subtasks', this.task.id);
+
+  }
 })
 </script>
 

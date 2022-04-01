@@ -1,16 +1,24 @@
 <template>
   <div class="bg-white px-5 py-5 rounded-xl mb-3">
     <div class="flex flex-row items-center justify-between">
-      <p class="text-md cursor-pointer" @click="isShowing = !isShowing">teste</p>
+      <p class="text-md cursor-pointer" @click="isShowing = !isShowing">{{ subtask.title }}</p>
       <div class="flex flex-row gap-2">
-        <div class="w-6 h-6 rounded-full cursor-pointer" :class="status === 1 ? 'bg-red-400' : 'bg-gray-400'" @click="changeStatus(1)"/>
-        <div class="w-6 h-6 rounded-full cursor-pointer" :class="status === 2 ? 'bg-yellow-400' : 'bg-gray-400'" @click="changeStatus(2)"/>
-        <div class="w-6 h-6 rounded-full cursor-pointer" :class="status === 3 ? 'bg-blue-400' : 'bg-gray-400'" @click="changeStatus(3)"/>
-        <div class="w-6 h-6 rounded-full cursor-pointer" :class="status === 4 ? 'bg-green-400' : 'bg-gray-400'" @click="changeStatus(4)"/>
+        <div class="w-6 h-6 rounded-full cursor-pointer flex justify-center items-center text-white" :class="status === 4 ? 'bg-red-400' : 'bg-gray-400'" @click="changeStatus(4)">
+          <font-awesome-icon icon="fa-solid fa-xmark" class="w-3 h-3" v-if="status === 4"/>
+        </div>
+        <div class="w-6 h-6 rounded-full cursor-pointer flex justify-center items-center text-white" :class="status === 3 ? 'bg-yellow-400' : 'bg-gray-400'" @click="changeStatus(3)">
+          <font-awesome-icon icon="fa-solid fa-clock bg-white" class="w-3 h-3" v-if="status === 3"/>
+        </div>
+        <div class="w-6 h-6 rounded-full cursor-pointer flex justify-center items-center text-white" :class="status === 2 ? 'bg-blue-400' : 'bg-gray-400'" @click="changeStatus(2)">
+          <font-awesome-icon icon="fa-solid fa-play bg-white" class="w-3 h-3" v-if="status === 2"/>
+        </div>
+        <div class="w-6 h-6 rounded-full cursor-pointer flex justify-center items-center text-white" :class="status === 1 ? 'bg-green-400' : 'bg-gray-400'" @click="changeStatus(1)">
+          <font-awesome-icon icon="fa-solid fa-check bg-white" class="w-3 h-3" v-if="status === 1"/>
+        </div>
       </div>
     </div>
     <div v-show="isShowing === true">
-      <p class="mt-5 break-all">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad animi architecto atque consectetur ex exercitationem itaque labore laboriosam molestiae nam nobis pariatur, quisquam quos, ratione repellat rerum voluptatum! Ut, vitae?</p>
+      <p class="mt-5 break-all">{{subtask.description}}</p>
       <div class="text-right mt-5">
         <a href="" class="text-red-500 pr-5">Excluir</a>
         <a href="" class="btn-primary">Editar</a>
@@ -24,15 +32,25 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  props: {
+    subtask: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      status: 4,
+      status: this.subtask.status_id,
       isShowing: false
     }
   },
   methods: {
     changeStatus(value: number) {
       this.status = value
+      this.$store.dispatch('updateSubtaskStatus', {
+        subtaskId: this.subtask.id,
+        statusId: this.status
+      })
     }
   }
 })
