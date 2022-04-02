@@ -13,8 +13,8 @@
         </div>
         <!-- Modal body -->
         <div class="p-6 space-y-6">
-          <BaseInput id="name" label="Nome da tarefa" type="text" v-model="title" :maxlength="30"/>
-          <BaseInput id="descricao" label="Descrição da tarefa" type="text" v-model="description" :maxlength="255"/>
+          <BaseInput id="name" label="Nome da subtarefa" type="text" v-model="title" :maxlength="30"/>
+          <BaseInput id="descricao" label="Descrição da subtarefa" type="text" v-model="description" :maxlength="255"/>
         </div>
         <!-- Modal footer -->
         <div class="flex items-center justify-end p-4 rounded-b border-t border-gray-200 dark:border-gray-600 w-full ">
