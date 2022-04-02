@@ -1,9 +1,7 @@
 <template>
   <div class="w-full screen-list bg-white rounded-xl flex flex-col gap-3 overflow-y-scroll">
     <TaskItem v-for="task in tasks" :key="task.id" :task="task" @open="openEdit"/>
-    <div class="" v-if="modalEdit">
-      <ModalEditTask :task="taskSelect"/>
-    </div>
+    <ModalEditTask :task="taskSelect" v-if="modalEdit"/>
   </div>
 </template>
 
@@ -21,8 +19,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    openEdit(task: Object) {
-      this.taskSelect = task;
+    async openEdit(task: Object) {
+      this.taskSelect = task
+      this.$store.dispatch('setModalEdit');
     }
   },
   computed: {

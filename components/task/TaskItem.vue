@@ -7,10 +7,7 @@
         </h3>
         <div class="space-x-3 flex flex-row">
           <select class="rounded-xl px-4 py-2" v-model="taskStatus">
-            <option value="1">Concluido</option>
-            <option value="2">Em Desenvolvimento</option>
-            <option value="3">Atrasado</option>
-            <option value="4">Cancelado</option>
+            <option :value="status.id" v-for="status in $store.state.status">{{status.status}}</option>
           </select>
           <font-awesome-icon icon="fa-solid fa-trash" class="text-red-400 w-5" @click="removeTask"/>
           <font-awesome-icon icon="fa-solid fa-pen-to-square" class="text-blue-400 w-5 cursor-pointer" @click="openModal"/>
@@ -23,7 +20,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 
 import Vue from 'vue'
@@ -49,19 +45,22 @@ export default Vue.extend({
   methods: {
     openModal() {
       this.$emit('open',this.task)
-      this.$store.dispatch('setModalEdit');
     },
     removeTask() {
       this.$store.dispatch('removeTask', this.task);
     },
   },
   watch: {
+    task(){
+      this.taskStatus = this.task.status_id;
+    },
     taskStatus() {
       this.$store.dispatch('updateTaskStatus', {
         taskId: this.task.id,
         statusId: this.taskStatus
       });
     }
+
   },
 })
 </script>

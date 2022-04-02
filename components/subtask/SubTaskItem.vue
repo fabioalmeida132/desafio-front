@@ -20,8 +20,8 @@
     <div v-show="isShowing === true">
       <p class="mt-5 break-all">{{subtask.description}}</p>
       <div class="text-right mt-5">
-        <a href="" class="text-red-500 pr-5">Excluir</a>
-        <a href="" class="btn-primary">Editar</a>
+        <button class="text-red-500 pr-5" @click="removeSubtask">Excluir</button>
+        <button class="btn-primary" @click="openModal">Editar</button>
       </div>
     </div>
   </div>
@@ -30,11 +30,12 @@
 <script lang="ts">
 
 import Vue from 'vue'
+import {mapGetters} from "vuex";
 
 export default Vue.extend({
   props: {
     subtask: {
-      type: Object,
+      type: [Array,Object],
       required: true
     }
   },
@@ -44,10 +45,26 @@ export default Vue.extend({
       isShowing: false
     }
   },
+  computed: {
+    ...mapGetters({
+      modalEditSubtask: 'modalEditSubtask'
+    })
+  },
   methods: {
+    openModal(){
+      this.$store.dispatch('setSubtaskActive', this.subtask)
+      this.$emit('open')
+    },
+    removeSubtask() {
+     this.$store.dispatch('removeSubtask', this.subtask).then(subtasks => {
+       this.$emit('update',subtasks)
+     })
+
+    },
     changeStatus(value: number) {
       this.status = value
       this.$store.dispatch('updateSubtaskStatus', {
+        taskId: this.subtask.task_id,
         subtaskId: this.subtask.id,
         statusId: this.status
       })
