@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed overflow-y-auto overflow-x-hidden fixed top-1/4 right-1/3 left-0 sm:left-1/3 z-50 w-full h-modal md:h-full">
+  <div class="fixed overflow-y-auto overflow-x-hidden fixed top-1/4 right-1/3 left-0 flex justify-center z-50 w-full h-modal md:h-full">
     <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
         <!-- Modal header -->
@@ -18,7 +18,7 @@
         </div>
         <!-- Modal footer -->
         <div class="flex items-center justify-end p-4 rounded-b border-t border-gray-200 dark:border-gray-600 w-full ">
-          <button class="btn-primary" @click="addBoard">Criar Quadro</button>
+          <button class="btn-success" @click="addBoard">Criar Quadro</button>
         </div>
       </div>
     </div>

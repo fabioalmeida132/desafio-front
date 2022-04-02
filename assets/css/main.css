@@ -13,3 +13,11 @@ body{
 .btn-danger{
   @apply bg-red-500 text-white py-1 px-3 rounded-xl;
 }
+
+.btn-success{
+  @apply bg-green-700 text-white py-1 px-3 rounded-xl;
+}
+
+.btn-backpage {
+  @apply bg-sky-900 text-white py-1 px-3 rounded-xl;
+}

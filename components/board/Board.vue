@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-56 h-40 rounded-xl shadow-xl flex items-center justify-center">
+  <div class="bg-white h-40 rounded-xl shadow-xl flex items-center justify-center ">
     <div class="flex flex-col justify-center items-center space-y-3 mr-5 ml-5">
       <div class="text-center">
         <h1 class="text-xl break-all font-bold">{{board.title}}</h1>

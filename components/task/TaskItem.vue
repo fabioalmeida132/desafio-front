@@ -1,12 +1,12 @@
 <template>
   <div class="z-1">
     <div class="bg-gray-100 border shadow-sm pt-3 pb-3 pl-5 pr-5 rounded-xl w-full">
-      <div class="flex flex-row justify-between items-center">
-        <h3 class="cursor-pointer select-none text-md sm:text-xl font-bold text-sky-800" @click="isShowing = !isShowing">
+      <div class="flex flex-row grow justify-between items-center">
+        <h3 class="cursor-pointer select-none text-md sm:text-xl font-bold text-sky-800 flex flex-row gap-3 items-center justify-center" @click="isShowing = !isShowing">
           {{ task.title }}
         </h3>
         <div class="space-x-3 flex flex-row">
-          <select class="rounded-xl px-4 py-2" v-model="taskStatus">
+          <select class="rounded-xl px-4 py-2 invisible sm:visible" v-model="taskStatus">
             <option :value="status.id" v-for="status in $store.state.status">{{status.status}}</option>
           </select>
           <font-awesome-icon icon="fa-solid fa-trash cursor-pointer" class="text-red-400 w-5" @click="removeTask"/>

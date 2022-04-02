@@ -6,6 +6,7 @@ export const state = () => ({
   subtasks: [],
   status: [],
   modalEdit: false,
+  modalEditBoard: false,
   modalAddSubtask: false,
   modalEditSubtask: false,
   activeTask: null,
@@ -53,6 +54,14 @@ export const mutations = {
   },
   SET_MODAL_EDIT_SUBTASK(state) {
     state.modalEditSubtask = !state.modalEditSubtask
+  },
+  SET_MODAL_EDIT_BOARD(state) {
+    state.modalEditBoard = !state.modalEditBoard
+  },
+
+  UPDATE_BOARD(state, board) {
+    const boardFind = state.boards.findIndex(b => b.id === board.id)
+    state.boards.splice(boardFind, 1, board)
   },
   UPDATE_TASK(state, task) {
     const index = state.tasks.findIndex(t => t.id === task.id)
@@ -109,8 +118,7 @@ export const actions = {
   },
 
   async removeSubtask({ commit }, subtask) {
-    const sub = await this.$axios.$delete(`/subtask/${subtask.id}`)
-    return await this.$axios.$get(`/subtasks/${subtask.task_id}`)
+    return await this.$axios.$delete(`/subtask/${subtask.id}`)
   },
 
   async setActiveBoard({ commit, state }, board) {
@@ -129,13 +137,11 @@ export const actions = {
   },
 
   async tasks({state }) {
-    const tasks = await this.$axios.$get(`/tasks/${state.activeBoard}`)
-    return tasks
+    return await this.$axios.$get(`/tasks/${state.activeBoard}`)
   },
 
   async subtasks({},payload) {
-    const subtasks =  await this.$axios.$get(`/subtasks/${payload}`)
-    return subtasks
+    return await this.$axios.$get(`/subtasks/${payload}`)
   },
 
   async updateTaskStatus({ commit,state }, payload) {
@@ -147,14 +153,9 @@ export const actions = {
   },
 
   async updateSubtaskStatus({ commit, actions }, payload) {
-    const task = await this.$axios.$put(`/subtask/status/${payload.subtaskId}`, {
+    await this.$axios.$put(`/subtask/status/${payload.subtaskId}`, {
       statusId: payload.statusId
     })
-
-    let subtasksUpdated = await this.$axios.$get(`/subtasks/${payload.taskId}`)
-    commit('ADD_SUBTASK_TO_LIST', subtasksUpdated)
-
-    return subtasksUpdated
   },
 
   async updateTask({ commit, dispatch }, payload) {
@@ -168,26 +169,30 @@ export const actions = {
     commit('UPDATE_TASK', task)
   },
 
+  async updateBoard({ commit,state }, payload) {
+    const board = await this.$axios.$put(`/board/${payload.id}`, {
+      title: payload.title,
+      description: payload.description
+    })
+
+    commit('UPDATE_BOARD', board)
+    commit('SET_BOARD_SELECTED', board)
+  },
+
   async updateSubtask({ commit, dispatch }, payload) {
-    const subtask = await this.$axios.$put(`/subtask/${payload.id}`, {
+    await this.$axios.$put(`/subtask/${payload.id}`, {
       title: payload.title,
       description: payload.description,
       statusId: payload.statusId
-    }).then(async () => {
-      const subtasksUpdated = await this.$axios.$get(`/subtasks/${payload.taskId}`)
-      commit('ADD_SUBTASK_TO_LIST', subtasksUpdated)
     })
-
-
-  },
-
-  async findTask({ commit, state }, payload) {
-    let task = await state.tasks.find(t => t.id === Number(payload.id))
-    return task
   },
 
   setModalEdit({ commit }) {
     commit('SET_MODAL_EDIT')
+  },
+
+  setModalEditBoard({ commit }) {
+    commit('SET_MODAL_EDIT_BOARD')
   },
 
   setModalAddSubtask({ commit }) {
@@ -215,5 +220,6 @@ export const getters = {
   modalEdit: state => state.modalEdit,
   modalAddSubtask: state => state.modalAddSubtask,
   modalEditSubtask: state => state.modalEditSubtask,
+  modalEditBoard: state => state.modalEditBoard,
   selectedBoard: state => state.boardSelected
 }

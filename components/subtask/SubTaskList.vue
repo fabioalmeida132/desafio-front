@@ -3,11 +3,11 @@
     <div class="mt-5">
       <div class="flex flex-row justify-between items-center mb-3">
         <h4 class="text-sm sm:text-lg font-semibold mb-3">Subtarefas</h4>
-        <button @click="openModal"> + Adicionar Subtarefa</button>
+        <button @click="openModal" class="text-green-700"> + Adicionar Subtarefa</button>
       </div>
-      <SubTaskItem v-for="subtask in subtasks" :key="subtask.id" :subtask="subtask" @open="openEdit"/>
+      <SubTaskItem v-for="subtask in subtasks" :key="subtask.id" :subtask="subtask" @open="openEdit" @update="fetchSubtask"/>
     </div>
-    <ModalEditSubtask v-if="modalEditSubtask" :subtask="subtaskSelect"/>
+    <ModalEditSubtask v-if="modalEditSubtask" :subtask="subtaskSelect" @update="updateTaskList"/>
   </div>
 </template>
 
@@ -31,20 +31,30 @@ export default Vue.extend({
   },
   computed: {
     ...mapState({
-      'subtask' : 'subtasks',
-      modalEditSubtask: 'modalEditSubtask'
+      modalEditSubtask: 'modalEditSubtask',
+      modalAddSubtask: 'modalAddSubtask'
     }),
-    ...mapGetters({
-      modalEditSubtask: 'modalEditSubtask'
-    })
-  },
-  watch: {
-    subtask(oldValue) {
-      this.getSubtasks();
-    }
   },
   components: {ModalEditSubtask, SubTaskItem},
+  watch: {
+    modalAddSubtask:{
+      handler(newValue, oldValue) {
+        if(newValue === false){
+          this.fetchSubtask();
+        }
+      },
+      deep: true
+    }
+  },
   methods: {
+    async fetchSubtask() {
+      this.subtasks =  await this.$store.dispatch('subtasks', this.task.id);
+    },
+     updateTaskList(subtask: Object) {
+      if(this.task.id === subtask) {
+        this.fetchSubtask();
+      }
+    },
     async openEdit(subtask: Object) {
       this.subtaskSelect = subtask
       this.$store.dispatch('setModalEditSubtask');
@@ -53,11 +63,6 @@ export default Vue.extend({
       this.$store.dispatch('setTaskItemSelected',this.task.id)
       this.$store.dispatch('setModalAddSubtask');
     },
-    getSubtasks() {
-      this.$store.dispatch('subtasks', this.task.id).then(subtasks => {
-        this.subtasks = subtasks;
-      });
-    }
   },
   async fetch() {
     this.subtasks = await this.$store.dispatch('subtasks', this.task.id);

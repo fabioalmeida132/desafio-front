@@ -57,7 +57,7 @@ export default Vue.extend({
     },
     removeSubtask() {
      this.$store.dispatch('removeSubtask', this.subtask).then(subtasks => {
-       this.$emit('update',subtasks)
+       this.$emit('update')
      })
 
     },
