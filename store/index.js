@@ -23,6 +23,7 @@ export const mutations = {
     state.tasks.push(task)
   },
   ADD_SUBTASK_TO_LIST(state, subtasks) {
+    state.subtasks = [];
     state.subtasks = subtasks;
   },
   REMOVED_BOARD_FROM_LIST(state, board) {
@@ -150,9 +151,10 @@ export const actions = {
       statusId: payload.statusId
     })
 
-    const subtasksUpdated = await this.$axios.$get(`/subtasks/${payload.taskId}`)
+    let subtasksUpdated = await this.$axios.$get(`/subtasks/${payload.taskId}`)
     commit('ADD_SUBTASK_TO_LIST', subtasksUpdated)
 
+    return subtasksUpdated
   },
 
   async updateTask({ commit, dispatch }, payload) {
@@ -167,15 +169,15 @@ export const actions = {
   },
 
   async updateSubtask({ commit, dispatch }, payload) {
-
     const subtask = await this.$axios.$put(`/subtask/${payload.id}`, {
       title: payload.title,
       description: payload.description,
       statusId: payload.statusId
+    }).then(async () => {
+      const subtasksUpdated = await this.$axios.$get(`/subtasks/${payload.taskId}`)
+      commit('ADD_SUBTASK_TO_LIST', subtasksUpdated)
     })
 
-    const subtasksUpdated = await this.$axios.$get(`/subtasks/${payload.taskId}`)
-    commit('ADD_SUBTASK_TO_LIST', subtasksUpdated)
 
   },
 
@@ -208,7 +210,6 @@ export const getters = {
   boards: state => state.boards,
   activeBoard: state => state.activeBoard,
   activeTask: state => state.activeTask,
-  activeSubtask: state => state.activeSubtask,
   tasks: state => state.tasks,
   subtasks: state => state.subtasks,
   modalEdit: state => state.modalEdit,

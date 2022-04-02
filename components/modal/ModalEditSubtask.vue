@@ -15,7 +15,6 @@
         <div class="p-6 space-y-6">
           <BaseInput id="name" label="Nome da tarefa" type="text" v-model="title" :maxlength="30"/>
           <BaseInput id="descricao" label="Descrição da tarefa" type="text" v-model="description" :maxlength="255"/>
-          <BaseSelect label="Selecione um status" v-model="statusId"/>
         </div>
         <!-- Modal footer -->
         <div class="flex items-center justify-end p-4 rounded-b border-t border-gray-200 dark:border-gray-600 w-full ">
@@ -38,20 +37,18 @@ export default Vue.extend({
     return {
       title: this.$store.state.activeSubtask.title,
       description: this.$store.state.activeSubtask.description,
-      statusId: this.$store.state.activeSubtask.status_id
     }
   },
   methods: {
-    updateStatus() {
-      this.$store.dispatch('updateSubtask', {
+    async updateStatus() {
+      await this.$store.dispatch('updateSubtask', {
         taskId: this.$store.state.activeSubtask.task_id,
         id: this.$store.state.activeSubtask.id,
         title: this.title,
         description: this.description,
-        statusId: this.statusId
       });
-      this.$emit('update')
-      this.$store.dispatch('setModalEditSubtask');
+      this.cancel();
+      this.$emit('update');
     },
     cancel() {
       this.$store.dispatch('setModalEditSubtask');

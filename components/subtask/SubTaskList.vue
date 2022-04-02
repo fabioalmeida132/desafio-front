@@ -5,20 +5,17 @@
         <h4 class="text-sm sm:text-lg font-semibold mb-3">Subtarefas</h4>
         <button @click="openModal"> + Adicionar Subtarefa</button>
       </div>
-      <SubTaskItem v-for="subtask in subtasks" :key="subtask.id" :subtask="subtask" @update="updateSubtasks" @open="openEdit"/>
+      <SubTaskItem v-for="subtask in subtasks" :key="subtask.id" :subtask="subtask" @open="openEdit"/>
     </div>
-    <ModalEditSubtask v-if="modalEditSubtask" :subtask="subtaskSelect" @update="updateSubtasks"/>
+    <ModalEditSubtask v-if="modalEditSubtask" :subtask="subtaskSelect"/>
   </div>
 </template>
 
 <script lang="ts">
-
 import Vue from 'vue'
 import SubTaskItem from "~/components/subtask/SubTaskItem.vue";
 import {mapGetters, mapState} from "vuex";
 import ModalEditSubtask from "~/components/modal/ModalEditSubtask.vue";
-
-
 export default Vue.extend({
   props: {
     task: {
@@ -56,9 +53,6 @@ export default Vue.extend({
       this.$store.dispatch('setTaskItemSelected',this.task.id)
       this.$store.dispatch('setModalAddSubtask');
     },
-    updateSubtasks(subtasks: Object) {
-      this.subtasks = subtasks;
-    },
     getSubtasks() {
       this.$store.dispatch('subtasks', this.task.id).then(subtasks => {
         this.subtasks = subtasks;
@@ -72,5 +66,4 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-
 </style>

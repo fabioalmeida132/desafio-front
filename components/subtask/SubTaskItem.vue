@@ -53,7 +53,7 @@ export default Vue.extend({
   methods: {
     openModal(){
       this.$store.dispatch('setSubtaskActive', this.subtask)
-      this.$emit('open')
+      this.$store.dispatch('setModalEditSubtask')
     },
     removeSubtask() {
      this.$store.dispatch('removeSubtask', this.subtask).then(subtasks => {
